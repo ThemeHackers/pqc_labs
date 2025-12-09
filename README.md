@@ -37,7 +37,7 @@ Interactive educational labs to explore core concepts:
 ### Steps
 1.  **Clone the repository:**
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/ThemeHackers/pqc_labs
     cd pqc_labs
     ```
 
