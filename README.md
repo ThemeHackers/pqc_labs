@@ -46,7 +46,7 @@ Interactive educational labs to explore core concepts:
     ```bash
     python3 -m venv .venv
     source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-    pip install "fastapi[standard]" pydantic cryptography pqcrypto psutil jinja2
+    pip3 install -r requirements.txt
     ```
     *(Note: `pqcrypto` is required for Kyber and Dilithium implementations)*
 
