@@ -1,0 +1,6 @@
+fastapi[standard]
+pydantic 
+cryptography 
+pqcrypto 
+psutil 
+jinja2
