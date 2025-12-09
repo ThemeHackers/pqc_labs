@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Shield | PQC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=2">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="logo-shield"></div>
+                <h2>Quantum<br>Shield</h2>
+                <button id="mobile-close" class="mobile-only">✕</button>
+            </div>
+            <nav>
+                <button class="nav-item active" data-tab="tab-kem">
+                    <span class="icon">K</span> Key Exchange
+                </button>
+                <button class="nav-item" data-tab="tab-sign">
+                    <span class="icon">S</span> Digital Identity
+                </button>
+                <button class="nav-item" data-tab="tab-drop">
+                    <span class="icon">D</span> PQ-Drop
+                </button>
+                <button class="nav-item" data-tab="tab-storage">
+                    <span class="icon">V</span> Secure Vault
+                </button>
+                <button class="nav-item" data-tab="tab-stego">
+                    <span class="icon">👁️</span> Steganography
+                </button>
+                <button class="nav-item" data-tab="tab-zkp">
+                    <span class="icon">🎭</span> ZKP Identity
+                </button>
+                <button class="nav-item" data-tab="tab-pki">
+                    <span class="icon">📜</span> Quantum PKI
+                </button>
+                <button class="nav-item" data-tab="tab-hash">
+                    <span class="icon">#</span> Hash Studio
+                </button>
+                <button class="nav-item" data-tab="tab-aes">
+                    <span class="icon">K</span> AES Lab
+                </button>
+                <button class="nav-item" data-tab="tab-hmac">
+                    <span class="icon">M</span> HMAC Auth
+                </button>
+                <button class="nav-item" data-tab="tab-password">
+                    <span class="icon">P</span> Password Audit
+                </button>
+                <button class="nav-item" data-tab="tab-entropy">
+                    <span class="icon">E</span> Entropy Visualizer
+                </button>
+                <button class="nav-item" data-tab="tab-network">
+                    <span class="icon">N</span> Network Guard
+                </button>
+                <button class="nav-item" data-tab="tab-audit">
+                    <span class="icon">A</span> Audit Trail
+                </button>
+                <button class="nav-item" data-tab="tab-health">
+                    <span class="icon">H</span> System Health
+                </button>
+                <button class="nav-item" data-tab="tab-guide">
+                    <span class="icon">G</span> User Guide
+                </button>
+            </nav>
+        </aside>
+        <main class="content-area">
+            <header class="top-bar">
+                <div class="header-left">
+                    <button id="mobile-menu-btn" class="mobile-only">☰</button>
+                    <h1>Post-Quantum Cryptography Security Lab</h1>
+                </div>
+            </header>
+            <div id="tab-kem" class="tab-content active">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>Secure Channel Establishment</h3>
+                        <span class="badge">ML-KEM-512</span>
+                    </div>
+                    <p class="desc">Establish a quantum-secure shared secret using the Lattice-based ML-KEM-512
+                        algorithm, immune to Shor's algorithm and harvest-now-decrypt-later attacks.</p>
+                    <div class="policy-grid"
+                        style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:15px; margin-top:20px;">
+                        <button class="btn-policy" data-policy="pqc_handshake">
+                            <div class="policy-icon">🤝</div>
+                            <div class="policy-info">
+                                <h4>Allow PQC Handshake</h4>
+                                <span class="status-text">Enabled</span>
+                            </div>
+                        </button>
+                        <button class="btn-policy" data-policy="legacy_rsa">
+                            <div class="policy-icon">📜</div>
+                            <div class="policy-info">
+                                <h4>Allow Legacy RSA-2048</h4>
+                                <span class="status-text">Disabled</span>
+                            </div>
+                        </button>
+                        <button class="btn-policy" data-policy="require_mldsa">
+                            <div class="policy-icon">✍️</div>
+                            <div class="policy-info">
+                                <h4>Require ML-DSA Signatures</h4>
+                                <span class="status-text">Enforced</span>
+                            </div>
+                        </button>
+                        <button class="btn-policy" data-policy="block_legacy_tls">
+                            <div class="policy-icon">🚫</div>
+                            <div class="policy-info">
+                                <h4>Block Legacy TLS < 1.3</h4>
+                                        <span class="status-text">Enforced</span>
+                            </div>
+                        </button>
+                        <button class="btn-policy" data-policy="enforce_hndl_protection">
+                            <div class="policy-icon">🛡️</div>
+                            <div class="policy-info">
+                                <h4>Anti-HNDL Protection</h4>
+                                <span class="status-text">Active</span>
+                            </div>
+                        </button>
+                        <button class="btn-policy" data-policy="require_entropy">
+                            <div class="policy-icon">🎲</div>
+                            <div class="policy-info">
+                                <h4>Require Quantum Entropy</h4>
+                                <span class="status-text">Enforced</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="kem-visualizer">
+                        <div class="node alice">
+                            <div class="node-icon">A</div>
+                            <h4>Alice</h4>
+                            <div class="status-dot" id="alice-status-dot"></div>
+                            <div class="secret-val" id="alice-secret">---</div>
+                        </div>
+                        <div class="connection-line">
+                            <div class="packet" id="packet-1">PK</div>
+                            <div class="packet" id="packet-2">CT</div>
+                            <div class="node hacker" id="hacker-node"
+                                style="display:none; position:absolute; top:-60px; flex-direction:column; align-items:center;">
+                                <div class="node-icon"
+                                    style="border-color:#f43f5e; width:50px; height:50px; font-size:1.2rem;">🕵️</div>
+                                <h4 style="color:#f43f5e; font-size:0.8rem; margin-top:5px;">Hacker</h4>
+                            </div>
+                            <button id="btn-exchange" class="btn-action btn-pulse">⚡ Negotiate Keys</button>
+                        </div>
+                        <div class="node bob">
+                            <div class="node-icon">B</div>
+                            <h4>Bob</h4>
+                            <div class="status-dot" id="bob-status-dot"></div>
+                            <div class="secret-val" id="bob-secret">---</div>
+                        </div>
+                    </div>
+                    <div id="kem-log" class="console-box"></div>
+                    <div class="step-card hacker-zone content-full-width" style="margin-top: 1rem;">
+                        <div class="hacker-header">
+                            <div class="step-num" style="color: rgba(244, 63, 94, 0.5);">👁️</div>
+                            <h4>Network Intercept (Hacker View)</h4>
+                        </div>
+                        <p class="small-desc">Real-time packet capture of the key exchange process.</p>
+                        <div class="code-block"
+                            style="background:#000; padding:15px; border:1px solid #333; font-family:'Courier New', monospace; font-size:0.8rem; overflow-x:auto;">
+                            <div
+                                style="color:#888; border-bottom:1px solid #333; margin-bottom:5px; padding-bottom:5px;">
+                                <span style="width:80px; display:inline-block;">OFFSET</span>
+                                <span style="width:200px; display:inline-block;">HEX DATA</span>
+                                <span>ASCII / INFO</span>
+                            </div>
+                            <div id="hacker-kem-row">
+                                <span style="color:#555;">00000000</span> <span style="color:#444;">-- -- -- --</span>
+                                <span style="color:#444;">WAITING FOR HANDSHAKE...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-sign" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>Digital Identity & Verification</h3>
+                        <span class="badge">ML-DSA-44</span>
+                    </div>
+                    <p class="desc">Authenticate transactions with ML-DSA-44 (Dilithium), ensuring non-repudiation and
+                        integrity even against quantum computers.</p>
+                    <div class="workflow-grid">
+                        <div class="step-card">
+                            <div class="step-num">01</div>
+                            <h4>Issue Identity</h4>
+                            <button id="btn-gen-keys" class="btn-subtle">🔑 Generate Keys</button>
+                            <div class="key-preview">
+                                <label>Public Key</label>
+                                <div id="dsa-pk" class="hash-text">Not Generated</div>
+                                <input type="hidden" id="dsa-sk">
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">02</div>
+                            <h4>Sign Message</h4>
+                            <input type="text" id="msg-input" placeholder="Critical Instruction...">
+                            <button id="btn-sign" class="btn-subtle" disabled>🖋️ Sign Data</button>
+                            <label>Signature Hash</label>
+                            <div id="dsa-sig" class="hash-text">---</div>
+                        </div>
+                        <div class="step-card hacker-zone content-full-width">
+                            <div class="hacker-header">
+                                <div class="step-num" style="color: rgba(244, 63, 94, 0.1);">!</div>
+                                <h4>⚠ Hacker Intercept ⚠</h4>
+                            </div>
+                            <p class="small-desc">Simulate a Man-in-the-Middle attack by modifying the data before it
+                                reaches the receiver.</p>
+                            <div class="hacker-controls">
+                                <input type="text" id="intercepted-msg" placeholder="Waiting for intercepted packet..."
+                                    class="hacker-input">
+                                <button id="btn-tamper" class="btn-danger">😈 Tamper Data</button>
+                            </div>
+                            <div class="code-block"
+                                style="background:#000; padding:10px; border-radius:6px; font-family:monospace; color:#0f0; font-size:0.8rem; margin-top:10px; max-height:250px; overflow-y:auto;">
+                                <div id="hacker-id-log">
+                                    <div style="color:#555;">> Listening for ML-DSA-44 Signatures...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">03</div>
+                            <h4>Verify Integrity</h4>
+                            <button id="btn-verify" class="btn-subtle" disabled>✅ Verify Signature</button>
+                            <div id="verify-result" class="result-badge">Pending</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-drop" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>PQ-Drop File Transfer</h3>
+                        <span class="badge success">Hybrid: Kyber + AES-256</span>
+                    </div>
+                    <p class="desc">Transfer files protected by a hybrid cryptosystem: AES-256-GCM for high-speed data
+                        payload encryption and ML-KEM-512 for quantum-safe key encapsulation.</p>
+                    <div class="drop-interface" style="flex-direction: column;">
+                        <div class="drop-zone">
+                            <h4>1. Recipient Setup</h4>
+                            <button id="btn-drop-gen-keys" class="btn-action small">👤 Init Receiver</button>
+                            <div id="drop-pk-display" class="hash-text small">---</div>
+                        </div>
+                        <div class="drop-zone upload">
+                            <h4>2. Secure Upload</h4>
+                            <div id="drop-area" class="drag-drop-area">
+                                <div class="upload-icon">📂</div>
+                                <p>Drag & Drop file here</p>
+                                <span class="sub-text">or click to browse</span>
+                                <input type="file" id="file-input" hidden disabled>
+                            </div>
+                            <div id="selected-file" class="file-display"></div>
+                            <div class="action-group">
+                                <button id="btn-upload" class="btn-action full-width btn-pulse" disabled>🚀 Encrypt &
+                                    Send</button>
+                            </div>
+                            <div id="upload-status" class="status-msg"></div>
+                            <div class="step-card hacker-zone content-full-width" style="margin-top: 1rem;">
+                                <div class="hacker-header">
+                                    <div class="step-num" style="color: rgba(244, 63, 94, 0.5);">🕷️</div>
+                                    <h4>Deep Packet Inspection (Hacker View)</h4>
+                                </div>
+                                <div class="code-block"
+                                    style="background:#000; padding:15px; border:1px solid #333; font-family:'Courier New', monospace; font-size:0.8rem; overflow-x:auto;">
+                                    <div
+                                        style="display:grid; grid-template-columns: 100px 1fr; gap:10px; margin-bottom:5px;">
+                                        <div style="color:#0ea5e9;">[PROTOCOL]</div>
+                                        <div>Hybrid Encap (Kyber) + AES-256-GCM</div>
+                                    </div>
+                                    <div style="border-top:1px dashed #333; margin:5px 0;"></div>
+                                    <div id="hacker-drop-structure">
+                                        <div style="color:#555;">> Waiting for file upload...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="drop-zone list">
+                            <h4>3. Secure Download</h4>
+                            <select id="file-list" disabled>
+                                <option>No files</option>
+                            </select>
+                            <button id="btn-download" class="btn-action small" disabled>💾 Decrypt & Save</button>
+                            <div id="decrypt-result" class="console-box small"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-storage" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>Secure Vault Storage</h3>
+                        <span class="badge success">AES-256-GCM (In-Memory)</span>
+                    </div>
+                    <p class="desc">Store sensitive secrets in volatile memory, encrypted at rest with AES-256-GCM to
+                        prevent cold-boot and memory dump attacks.</p>
+                    <div class="action-group" style="flex-direction:row; gap:10px; margin-bottom:1.5rem;">
+                        <input type="text" id="vault-name" placeholder="Secret Name (e.g. API Key)" class="input-light"
+                            style="flex:1;">
+                        <input type="text" id="vault-secret" placeholder="Secret Content" class="input-light"
+                            style="flex:2;">
+                        <button id="btn-vault-save" class="btn-action btn-pulse">🔒 Lock it</button>
+                    </div>
+                    <div class="step-card hacker-zone content-full-width" style="margin-bottom: 1rem;">
+                        <div class="hacker-header">
+                            <div class="step-num" style="color: rgba(244, 63, 94, 0.5);"></div>
+                            <h4>Memory Dump (Hacker View)</h4>
+                        </div>
+                        <div class="code-block"
+                            style="background:#000; padding:15px; border:1px solid #333; font-family:'Courier New', monospace; font-size:0.8rem; overflow-x:auto;">
+                            <div style="color:#888; margin-bottom:5px;">Snapshots of heap memory at 0x84F...</div>
+                            <div style="border-top:1px dashed #333; margin:5px 0;"></div>
+                            <div id="hacker-vault-dump">
+                                <span style="color:#444;">[EMPTY] No active secrets in stack</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="vault-list" class="workflow-grid"></div>
+                </div>
+            </div>
+            <div id="tab-stego" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>Quantum Steganography</h3>
+                        <span class="badge">LSB Encoding</span>
+                    </div>
+                    <p class="desc">Hide secret messages within image pixels using Least Significant Bit (LSB)
+                        modification. Detectable only by statistical analysis.</p>
+                    <div class="workflow-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div>
+                            <h4>1. Select Cover Image</h4>
+                            <div class="drop-zone" id="stego-drop-zone"
+                                onclick="document.getElementById('stego-upload').click()" style="margin-top:20px;">
+                                <p style="margin:0; font-size:1.1rem;">📁 Drag & Drop Image Here</p>
+                                <small style="display:block; margin-top:40px;">or click to browse</small>
+                                <input type="file" id="stego-upload" accept="image/*" style="display:none">
+                            </div>
+                            <canvas id="stego-canvas-source"
+                                style="max-width:100%; border:1px solid #333; margin-top:10px; display:none;"></canvas>
+                        </div>
+                        <div>
+                            <h4>2. Secret Message</h4>
+                            <input type="text" id="stego-text" class="hacker-input"
+                                placeholder="Enter top secret data...">
+                            <div style="margin-top:10px; display:flex; gap:10px;">
+                                <button class="btn-action" onclick="runLabStegoEncode()">🔒 Encode & Hide</button>
+                                <button class="btn-subtle" onclick="runLabStegoDecode()">🔓 Decode</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <h4>3. Result (Stego-Image)</h4>
+                        <p class="small-desc">Right-click to save. Looks identical to original.</p>
+                        <canvas id="stego-canvas-target" style="max-width:100%; border:1px solid #333;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-zkp" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>Zero Knowledge Proof (ZKP)</h3>
+                        <span class="badge">Fiat-Shamir</span>
+                    </div>
+                    <p class="desc">Prove you know a secret <b>x</b> (where y = g<sup>x</sup>) without revealing it to
+                        the server.</p>
+                    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+                        <div class="step-card">
+                            <h4>1. Prover (You)</h4>
+                            <input type="number" id="zkp-secret" class="hacker-input"
+                                placeholder="Enter Secret x (1-100)">
+                            <button class="btn-action" onclick="runLabZkp()">🚀 Start Proof</button>
+                        </div>
+                        <div class="step-card">
+                            <h4>2. Protocol Flow</h4>
+                            <div id="zkp-log" class="console-box" style="height:150px;">Waiting for proof...</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Verification</h4>
+                            <div class="metric-value" id="zkp-result">--</div>
+                            <small>Server Status</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-pki" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>Quantum PKI (Mini-CA)</h3>
+                        <span class="badge">Root CA</span>
+                    </div>
+                    <p class="desc">Issue X.509 Certificates signed by the Lab's internal Root Certificate Authority.
+                    </p>
+                    <div class="workflow-grid">
+                        <div>
+                            <h4>Subject Information</h4>
+                            <input type="text" id="pki-cn" class="hacker-input"
+                                placeholder="Common Name (e.g., alice.org)">
+                            <button class="btn-action" onclick="runLabPki()" style="margin-top:10px;">📜 Issue
+                                Certificate</button>
+                        </div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:1.5rem; margin-top:2rem;">
+                        <div>
+                            <h4>Private Key (Keep Safe)</h4>
+                            <textarea id="pki-key-out" class="hacker-input"
+                                style="height:200px; width:100%; font-family:monospace; font-size:0.75rem;"
+                                readonly></textarea>
+                        </div>
+                        <div>
+                            <h4>Signed Certificate (Public)</h4>
+                            <textarea id="pki-cert-out" class="hacker-input"
+                                style="height:200px; width:100%; font-family:monospace; font-size:0.75rem; color:#07ffe9;"
+                                readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-network" class="tab-content">
+                <div class="card glass-panel" style="min-height: 450px; display:flex; flex-direction:column;">
+                    <div class="card-header">
+                        <h3>Enterprise Network Guard</h3>
+                        <span class="badge success">Live Monitoring</span>
+                    </div>
+                    <p class="desc">Monitor encrypted traffic flows in real-time to detect anomalous data exfiltration
+                        patterns.</p>
+                    <div class="workflow-grid"
+                        style="grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div class="step-card" style="padding: 15px;">
+                            <small>Download Speed</small>
+                            <div class="step-num" id="net-rx-speed">0 KB/s</div>
+                            <div class="hash-text" style="color:var(--primary);">▼ Incoming</div>
+                        </div>
+                        <div class="step-card" style="padding: 15px;">
+                            <small>Upload Speed</small>
+                            <div class="step-num" id="net-tx-speed">0 KB/s</div>
+                            <div class="hash-text" style="color:var(--secondary);">▲ Outgoing</div>
+                        </div>
+                        <div class="step-card" style="padding: 15px;">
+                            <small>Total Packets</small>
+                            <div class="step-num" id="net-packets">0</div>
+                            <small>Transmitted</small>
+                        </div>
+                    </div>
+                    <div
+                        style="flex:1; position:relative; min-height:400px; margin-top:20px; border:1px solid #333; overflow:hidden; border-radius:8px; background:rgba(0,0,0,0.3);">
+                        <canvas id="net-chart" style="width: 100%; height: 100%; display:block;"></canvas>
+                        <div class="grid-overlay"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-audit" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>System Audit Log</h3>
+                        <span class="badge">Real-time</span>
+                    </div>
+                    <table style="width:100%; border-collapse:collapse; color:var(--text-dim); font-size:0.9rem;">
+                        <thead>
+                            <tr style="border-bottom:1px solid var(--border); text-align:left;">
+                                <th style="padding:10px;">Timestamp</th>
+                                <th style="padding:10px;">Event</th>
+                                <th style="padding:10px;">Status</th>
+                                <th style="padding:10px;">Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="tab-health" class="tab-content">
+                <div class="card glass-panel">
+                    <h3>System Health</h3>
+                    <div class="workflow-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                        <div class="metric-card">
+                            <h4>CPU Load</h4>
+                            <div class="metric-value" id="health-cpu">--%</div>
+                            <small>Processor</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>RAM Usage</h4>
+                            <div class="metric-value" id="health-ram">--%</div>
+                            <small>Memory</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Disk Usage</h4>
+                            <div class="metric-value" id="health-disk">--%</div>
+                            <small>Storage</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Entropy</h4>
+                            <div class="metric-value" id="health-entropy">--%</div>
+                            <small>Randomness</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Uptime</h4>
+                            <div class="metric-value" id="health-uptime">--</div>
+                            <small>Session</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Platform</h4>
+                            <div class="metric-value" id="health-platform" style="font-size:1.2rem;">--</div>
+                            <small>OS</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-hash" class="tab-content">
+                <div class="card glass-panel">
+                    <h3>Hashing Studio</h3>
+                    <p class="desc">Compare classical and modern hashes. Notice how slight changes affect the output
+                        (Avalanche Effect).</p>
+                    <input type="text" id="hash-input" placeholder="Type text to hash..." class="hacker-input"
+                        style="color:white; margin-bottom:1rem;">
+                    <select id="hash-algo">
+                        <option value="sha256">SHA-256 (Standard)</option>
+                        <option value="sha512">SHA-512 (Stronger)</option>
+                        <option value="sha3_256">SHA3-256 (Keccak/PQC)</option>
+                        <option value="md5">MD5 (Broken/Legacy)</option>
+                    </select>
+                    <button class="btn-action" onclick="runLabHash()">Generate Hash</button>
+                    <div class="result-badge" id="hash-output"
+                        style="font-family:monospace; word-break:break-all; min-height:3rem; margin-top:1rem; color:var(--primary);">
+                        ...</div>
+                </div>
+            </div>
+            <div id="tab-aes" class="tab-content">
+                <div class="card glass-panel">
+                    <h3>AES-256 Playground</h3>
+                    <p class="desc">Symmetric Encryption using AES-GCM/CTR. You control the Key and IV.</p>
+                    <input type="text" id="aes-input" placeholder="Message to encrypt..." class="hacker-input"
+                        style="color:white;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0;">
+                        <input type="text" id="aes-key" placeholder="Key (64 hex chars)" style="font-size:0.8rem;">
+                        <input type="text" id="aes-iv" placeholder="IV (32 hex chars)" style="font-size:0.8rem;">
+                    </div>
+                    <button class="btn-subtle" onclick="genAesParams()">🎲 Random Key/IV</button>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button class="btn-action" onclick="runLabAes('encrypt')">🔒 Encrypt</button>
+                    </div>
+                    <div class="console-box" id="aes-result" style="margin-top:1rem;">Result will appear here...</div>
+                </div>
+            </div>
+            <div id="tab-hmac" class="tab-content">
+                <div class="card glass-panel">
+                    <h3>HMAC Authentication</h3>
+                    <p class="desc">Keyed-Hash Message Authentication Code. Verifies both Integrity and Authenticity.
+                    </p>
+                    <input type="text" id="hmac-msg" placeholder="Message..." class="hacker-input" style="color:white;">
+                    <input type="text" id="hmac-key" placeholder="Secret Key..." style="margin:10px 0;">
+                    <button class="btn-action" onclick="runLabHmac()">Compute MAC</button>
+                    <div class="result-badge" id="hmac-output" style="font-family:monospace; color:var(--accent);">...
+                    </div>
+                </div>
+            </div>
+            <div id="tab-password" class="tab-content">
+                <div class="card glass-panel">
+                    <h3>Password Quantum Audit</h3>
+                    <p class="desc">Estimate time to crack your password using Classical vs Quantum (Grover's)
+                        Computers.</p>
+                    <input type="text" id="pwd-input" placeholder="Enter a password to test..." class="hacker-input"
+                        style="color:white;">
+                    <button class="btn-action" onclick="runLabPassword()">Audit Strength</button>
+                    <div class="workflow-grid" style="margin-top:2rem;">
+                        <div class="metric-card">
+                            <h4>Classical Time</h4>
+                            <div class="metric-value" id="pwd-classic" style="color:#f43f5e;">--</div>
+                            <small>Brute Force</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Quantum Time</h4>
+                            <div class="metric-value" id="pwd-quantum">--</div>
+                            <small>Grover's Algorithm</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Entropy Bits</h4>
+                            <div class="metric-value" id="pwd-bits">0</div>
+                            <small>Strength Score</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-entropy" class="tab-content">
+                <div class="card glass-panel">
+                    <h3>Entropy Visualizer</h3>
+                    <p class="desc">Visualizing True Randomness (TRNG/CSPRNG) from the OS.</p>
+                    <button class="btn-action" onclick="runLabEntropy()">⚡ Capture Entropy</button>
+                    <div style="display:flex; gap:20px; margin-top:2rem;">
+                        <div class="console-box" id="entropy-hex"
+                            style="flex:1; height:200px; word-break:break-all; font-size:0.7rem;">Raw Hex...</div>
+                        <div style="flex:1; background:rgba(0,0,0,0.3); border-radius:8px; padding:10px;">
+                            <canvas id="entropy-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="result-badge" id="entropy-score" style="margin-top:1rem;">Entropy Score: -- / 8.0</div>
+                </div>
+            </div>
+            <div id="tab-guide" class="tab-content">
+                <div class="card glass-panel">
+                    <h3>User Guide</h3>
+                    <div class="workflow-grid" style="text-align: left; display: block;">
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">1. ⚡ Key Exchange (ML-KEM-512)</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Securely negotiate a Shared
+                                Secret immune to quantum decryption.</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li>Click <b>⚡ Negotiate Keys</b>.</li>
+                                <li>Watch the animation: Alice sends Public Key -> Bob sends Encapsulated Key.</li>
+                                <li>Green Status = Success (Both parties share the same secret).</li>
+                            </ul>
+                        </div>
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">2. 🪪 Digital Identity (ML-DSA-44)</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Sign messages with a
+                                quantum-resistant digital signature.</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li><b>Step 1:</b> Click <b>Generate Keys</b> to issue a new identity.</li>
+                                <li><b>Step 2:</b> Type a message -> Click <b>Sign Data</b> to create a signature.</li>
+                                <li><b>Hacker Mode:</b> Edit text in the red box -> Click <b>Tamper</b>.</li>
+                                <li><b>Step 3:</b> Click <b>Verify Integrity</b> (Tampered data will show as Invalid).
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">3. 📦 PQ-Drop File Transfer</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Transfer files using Hybrid
+                                Encryption (Kyber + AES).</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li>Click <b>Init Receiver</b> to open the secure channel.</li>
+                                <li>Select a file and click <b>Upload & Encrypt</b>.</li>
+                                <li>Click the ⬇️ download button in the list to decrypt and retrieve the file.</li>
+                            </ul>
+                        </div>
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">4. 🛡️ Access & Vault</h4>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li><b>Secure Vault:</b> Enter Name + Secret -> Click Enact to store in RAM (AES-256).
+                                </li>
+                                <li><b>Access Control:</b> Toggle policies to dynamically enforce restrictions on the
+                                    backend.</li>
+                            </ul>
+                        </div>
+                        <div style="margin-bottom: 2rem; border-top:1px solid var(--border); padding-top:1rem;">
+                            <h4 style="color: var(--accent);">5. 🔬 Recommended Experiments</h4>
+                            <ul
+                                style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px; line-height: 1.6;">
+                                <li><b>MITM Simulation:</b> In Digital Identity, try tampering with the text
+                                    <i>after</i> signing but <i>before</i> verifying to see how the signature check
+                                    fails.</li>
+                                <li><b>Policy Impact:</b> Go to Access Control, disable <b>"Allow PQC Handshake"</b>,
+                                    and try to Negotiate Keys in Tab 1. Observe the immediate failure.</li>
+                                <li><b>Traffic Analysis:</b> Open the <b>Network Guard</b> tab alongside <b>PQ-Drop</b>.
+                                    Upload a large file and observe the real-time TX/RX spike in the graph.</li>
+                                <li><b>Audit Trail:</b> After performing multiple actions, check the <b>Audit Trail</b>
+                                    to see a chronological log of your security events.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/script.js"></script>
+</body>
+
+</html>
