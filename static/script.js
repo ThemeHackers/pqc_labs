@@ -47,7 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const kemLog = document.getElementById('kem-log');
     function log(msg) {
-        kemLog.innerHTML += `> ${msg}<br>`;
+        const div = document.createElement('div');
+        div.textContent = `> ${msg}`;
+        kemLog.appendChild(div);
         kemLog.scrollTop = kemLog.scrollHeight;
     }
 
@@ -84,21 +86,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const hackerRow = document.getElementById('hacker-kem-row');
                 if (hackerRow) {
-                    hackerRow.innerHTML = `
-                        <div style="margin-bottom:5px;">
-                            <span style="color:#f43f5e;">[INTERCEPTED]</span>
-                            <span style="color:#555;">0x00A1</span> 
-                            <span style="color:#10b981;">${pkPreview}...</span> 
-                            <span style="color:#888;">[ML-KEM-512 PK]</span>
-                        </div>
-                        <div>
-                            <span style="color:#f43f5e;">[INTERCEPTED]</span>
-                            <span style="color:#555;">0x00F4</span> 
-                            <span style="color:#f43f5e;">${ctPreview}...</span> 
-                            <span style="color:#888;">[CT]</span>
-                        </div>
-                        <div style="color:#f00; margin-top:10px;">> DECRYPT(CT) => FAILED: MISSING SK_AES</div>
-                    `;
+                    hackerRow.innerHTML = '';
+
+                    const row1 = document.createElement('div');
+                    row1.style.marginBottom = '5px';
+
+                    const span1 = document.createElement('span');
+                    span1.style.color = '#f43f5e';
+                    span1.textContent = '[INTERCEPTED]';
+                    row1.appendChild(span1);
+
+                    row1.appendChild(document.createTextNode(' '));
+
+                    const span2 = document.createElement('span');
+                    span2.style.color = '#555';
+                    span2.textContent = '0x00A1';
+                    row1.appendChild(span2);
+
+                    row1.appendChild(document.createTextNode(' '));
+
+                    const span3 = document.createElement('span');
+                    span3.style.color = '#10b981';
+                    span3.textContent = pkPreview + '...';
+                    row1.appendChild(span3);
+
+                    row1.appendChild(document.createTextNode(' '));
+
+                    const span4 = document.createElement('span');
+                    span4.style.color = '#888';
+                    span4.textContent = '[ML-KEM-512 PK]';
+                    row1.appendChild(span4);
+
+                    hackerRow.appendChild(row1);
+
+                    const row2 = document.createElement('div');
+
+                    const span5 = document.createElement('span');
+                    span5.style.color = '#f43f5e';
+                    span5.textContent = '[INTERCEPTED]';
+                    row2.appendChild(span5);
+
+                    row2.appendChild(document.createTextNode(' '));
+
+                    const span6 = document.createElement('span');
+                    span6.style.color = '#555';
+                    span6.textContent = '0x00F4';
+                    row2.appendChild(span6);
+
+                    row2.appendChild(document.createTextNode(' '));
+
+                    const span7 = document.createElement('span');
+                    span7.style.color = '#f43f5e';
+                    span7.textContent = ctPreview + '...';
+                    row2.appendChild(span7);
+
+                    row2.appendChild(document.createTextNode(' '));
+
+                    const span8 = document.createElement('span');
+                    span8.style.color = '#888';
+                    span8.textContent = '[CT]';
+                    row2.appendChild(span8);
+
+                    hackerRow.appendChild(row2);
+
+                    const row3 = document.createElement('div');
+                    row3.style.color = '#f00';
+                    row3.style.marginTop = '10px';
+                    row3.textContent = '> DECRYPT(CT) => FAILED: MISSING SK_AES';
+                    hackerRow.appendChild(row3);
+
                     hackerRow.parentElement.style.borderColor = '#f43f5e';
                     setTimeout(() => { hackerRow.parentElement.style.borderColor = '#333'; }, 2000);
                 }
@@ -137,7 +193,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateHackerIDLog(msg) {
         const log = document.getElementById('hacker-id-log');
         if (log) {
-            log.innerHTML += `<div>> ${msg}</div>`;
+            const div = document.createElement('div');
+            div.textContent = `> ${msg}`;
+            log.appendChild(div);
             log.scrollTop = log.scrollHeight;
         }
     }
@@ -308,17 +366,56 @@ document.addEventListener('DOMContentLoaded', () => {
             const kyberBlob = data.encapsulated_key_hex ? data.encapsulated_key_hex.substring(0, 32) : "00";
             const aesBlob = rawCT.substring(0, 32);
 
-            document.getElementById('hacker-drop-structure').innerHTML = `
-                <div style="margin-bottom:10px;">
-                    <div style="color:#aaa; font-size:0.75rem;">SECTION 1: KEY ENCAPSULATION</div>
-                    <div style="color:#10b981;">${kyberBlob}... <span style="color:#555;">(ML-KEM SHARED SECRET)</span></div>
-                </div>
-                <div style="margin-bottom:10px;">
-                    <div style="color:#aaa; font-size:0.75rem;">SECTION 2: ENCRYPTED PAYLOAD</div>
-                    <div style="color:#f43f5e;">${aesBlob}... <span style="color:#555;">(AES-256-GCM)</span></div>
-                    <div style="color:#444; font-size:0.75rem; margin-top:2px;">TAG ERROR: AUTHENTICATION FAILED</div>
-                </div>
-            `;
+            const hackerDrop = document.getElementById('hacker-drop-structure');
+            hackerDrop.innerHTML = '';
+
+            const div1 = document.createElement('div');
+            div1.style.marginBottom = '10px';
+            const title1 = document.createElement('div');
+            title1.style.color = '#aaa';
+            title1.style.fontSize = '0.75rem';
+            title1.textContent = 'SECTION 1: KEY ENCAPSULATION';
+            div1.appendChild(title1);
+
+            const content1 = document.createElement('div');
+            content1.style.color = '#10b981';
+            const span1 = document.createElement('span');
+            span1.textContent = kyberBlob + '... ';
+            const spanType1 = document.createElement('span');
+            spanType1.style.color = '#555';
+            spanType1.textContent = '(ML-KEM SHARED SECRET)';
+            content1.appendChild(span1);
+            content1.appendChild(spanType1);
+            div1.appendChild(content1);
+            hackerDrop.appendChild(div1);
+
+            const div2 = document.createElement('div');
+            div2.style.marginBottom = '10px';
+            const title2 = document.createElement('div');
+            title2.style.color = '#aaa';
+            title2.style.fontSize = '0.75rem';
+            title2.textContent = 'SECTION 2: ENCRYPTED PAYLOAD';
+            div2.appendChild(title2);
+
+            const content2 = document.createElement('div');
+            content2.style.color = '#f43f5e';
+            const span2 = document.createElement('span');
+            span2.textContent = aesBlob + '... ';
+            const spanType2 = document.createElement('span');
+            spanType2.style.color = '#555';
+            spanType2.textContent = '(AES-256-GCM)';
+            content2.appendChild(span2);
+            content2.appendChild(spanType2);
+            div2.appendChild(content2);
+
+            const errDiv = document.createElement('div');
+            errDiv.style.color = '#444';
+            errDiv.style.fontSize = '0.75rem';
+            errDiv.style.marginTop = '2px';
+            errDiv.textContent = 'TAG ERROR: AUTHENTICATION FAILED';
+            div2.appendChild(errDiv);
+
+            hackerDrop.appendChild(div2);
 
             refreshList();
         } else {
@@ -332,14 +429,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const logs = await res.json();
         const tbody = document.getElementById('audit-table-body');
         if (!tbody) return;
-        tbody.innerHTML = logs.map(l => `
-            <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px;">${l.timestamp}</td>
-                <td style="padding:10px;">${l.event}</td>
-                <td style="padding:10px; color: ${l.status === 'Success' || l.status.includes('Valid') ? '#10b981' : '#ef4444'}">${l.status}</td>
-                <td style="padding:10px; font-size:0.8rem; opacity:0.8;">${l.detail}</td>
-            </tr>
-        `).join('');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        logs.forEach(l => {
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = '1px solid var(--border)';
+
+            const td1 = document.createElement('td');
+            td1.style.padding = '10px';
+            td1.textContent = l.timestamp;
+            tr.appendChild(td1);
+
+            const td2 = document.createElement('td');
+            td2.style.padding = '10px';
+            td2.textContent = l.event;
+            tr.appendChild(td2);
+
+            const td3 = document.createElement('td');
+            td3.style.padding = '10px';
+            td3.style.color = (l.status === 'Success' || (l.status && l.status.includes('Valid'))) ? '#10b981' : '#ef4444';
+            td3.textContent = l.status;
+            tr.appendChild(td3);
+
+            const td4 = document.createElement('td');
+            td4.style.padding = '10px';
+            td4.style.fontSize = '0.8rem';
+            td4.style.opacity = '0.8';
+            td4.textContent = l.detail;
+            tr.appendChild(td4);
+
+            tbody.appendChild(tr);
+        });
     }
 
     async function updateHealth() {
@@ -382,17 +502,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 hexDump += realCiphertext.substr(i, 2) + " ";
             }
 
-            document.getElementById('hacker-vault-dump').innerHTML = `
-                <div style="display:flex; gap:15px;">
-                    <span style="color:#555;">${addr}</span>
-                    <span style="color:#0ea5e9;">${hexDump}..</span>
-                </div>
-                <div style="display:flex; gap:15px;">
-                    <span style="color:#555;">+0010</span>
-                    <span style="color:#0ea5e9;">.. .. .. .. .. .. .. ..</span>
-                </div>
-                <div style="color:#f00; margin-top:10px;">> MEMORY READ: PERMISSION DENIED (ENCRYPTED)</div>
-            `;
+            const vaultDump = document.getElementById('hacker-vault-dump');
+            vaultDump.innerHTML = '';
+
+            const row1 = document.createElement('div');
+            row1.style.display = 'flex';
+            row1.style.gap = '15px';
+
+            const span1 = document.createElement('span');
+            span1.style.color = '#555';
+            span1.textContent = addr;
+            row1.appendChild(span1);
+
+            const span2 = document.createElement('span');
+            span2.style.color = '#0ea5e9';
+            span2.textContent = hexDump + '..';
+            row1.appendChild(span2);
+
+            vaultDump.appendChild(row1);
+
+            const row2 = document.createElement('div');
+            row2.style.display = 'flex';
+            row2.style.gap = '15px';
+
+            const span3 = document.createElement('span');
+            span3.style.color = '#555';
+            span3.textContent = '+0010';
+            row2.appendChild(span3);
+
+            const span4 = document.createElement('span');
+            span4.style.color = '#0ea5e9';
+            span4.textContent = '.. .. .. .. .. .. .. ..';
+            row2.appendChild(span4);
+
+            vaultDump.appendChild(row2);
+
+            const row3 = document.createElement('div');
+            row3.style.color = '#f00';
+            row3.style.marginTop = '10px';
+            row3.textContent = '> MEMORY READ: PERMISSION DENIED (ENCRYPTED)';
+            vaultDump.appendChild(row3);
 
             updateVaultList();
             document.getElementById('vault-name').value = '';
@@ -406,13 +555,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const items = await res.json();
         const container = document.getElementById('vault-list');
         if (!container) return;
-        container.innerHTML = items.map(i => `
-            <div class="step-card">
-                <h4>${i.name}</h4>
-                <div class="hash-text">Stored: ${i.timestamp}</div>
-                <small style="color:var(--success);">AES-256 Encrypted</small>
-            </div>
-        `).join('');
+        if (!container) return;
+        container.innerHTML = '';
+        items.forEach(i => {
+            const div = document.createElement('div');
+            div.className = 'step-card';
+
+            const h4 = document.createElement('h4');
+            h4.textContent = i.name;
+            div.appendChild(h4);
+
+            const dateDiv = document.createElement('div');
+            dateDiv.className = 'hash-text';
+            dateDiv.textContent = `Stored: ${i.timestamp}`;
+            div.appendChild(dateDiv);
+
+            const small = document.createElement('small');
+            small.style.color = 'var(--success)';
+            small.textContent = 'AES-256 Encrypted';
+            div.appendChild(small);
+
+            container.appendChild(div);
+        });
     }
 
     function resizeCanvas() {
@@ -713,14 +877,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const canvas = document.getElementById('stego-canvas-source');
                 canvas.width = img.width;
                 canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
+                const ctx = canvas.getContext('2d', { willReadFrequently: true }); 
                 ctx.drawImage(img, 0, 0);
                 canvas.style.display = 'block';
 
                 const target = document.getElementById('stego-canvas-target');
                 target.width = img.width;
                 target.height = img.height;
-                target.getContext('2d').clearRect(0, 0, target.width, target.height);
+                target.getContext('2d', { willReadFrequently: true }).clearRect(0, 0, target.width, target.height);
 
                 if (stegoZone) {
                     stegoZone.querySelector('p').innerText = "✅ Selected: " + file.name;
@@ -755,162 +919,231 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.runLabStegoEncode = function () {
-        const text = document.getElementById('stego-text').value;
-        if (!text) return alert("Enter text!");
-        const src = document.getElementById('stego-canvas-source');
-        if (src.style.display === 'none') return alert("Upload image first!");
-
-        const ctx = src.getContext('2d');
-        const imgData = ctx.getImageData(0, 0, src.width, src.height);
-        const data = imgData.data;
-
-        let bin = "";
-        for (let i = 0; i < text.length; i++) {
-            bin += text.charCodeAt(i).toString(2).padStart(8, '0');
-        }
-        bin += "00000000";
-
-        if (bin.length > data.length / 4) return alert("Text too long for image!");
-
-        let binIdx = 0;
-        for (let i = 0; i < data.length; i += 4) {
-            if (binIdx < bin.length) {
-                data[i] = (data[i] & 0xFE) | parseInt(bin[binIdx++]);
-            }
-            if (binIdx < bin.length) {
-                data[i + 1] = (data[i + 1] & 0xFE) | parseInt(bin[binIdx++]);
-            }
-            if (binIdx < bin.length) {
-                data[i + 2] = (data[i + 2] & 0xFE) | parseInt(bin[binIdx++]);
-            }
-        }
-
-        const target = document.getElementById('stego-canvas-target');
-        const tCtx = target.getContext('2d');
-        tCtx.putImageData(imgData, 0, 0);
-        alert("Encoded! The image on the right contains your secret.");
-    };
-
-    window.runLabStegoDecode = function () {
-        const target = document.getElementById('stego-canvas-target');
-        let ctx;
-        const src = document.getElementById('stego-canvas-source');
-        if (!src || src.style.display === 'none') return alert("Upload image!");
-
-        ctx = src.getContext('2d');
-
-        const tCan = document.getElementById('stego-canvas-target');
-
-        const imgData = ctx.getImageData(0, 0, src.width, src.height);
-        const data = imgData.data;
-
-        let bin = "";
-        let charCode = 0;
-        let bitCount = 0;
-        let text = "";
-
-        for (let i = 0; i < data.length; i += 4) {
-            for (let j = 0; j < 3; j++) {
-                const bit = data[i + j] & 1;
-                charCode = (charCode << 1) | bit;
-                bitCount++;
-
-                if (bitCount === 8) {
-                    if (charCode === 0) {
-                        alert("Found Message: " + text);
-                        return;
-                    }
-                    text += String.fromCharCode(charCode);
-                    charCode = 0;
-                    bitCount = 0;
-
-                    if (text.length > 1000) return alert("No message found (or too long).");
-                }
-            }
-        }
-        alert("No hidden message detected.");
-    };
-
-    window.runLabZkp = async function () {
-        const x = parseInt(document.getElementById('zkp-secret').value);
-        if (!x) return alert("Enter a  secret x!");
-
-        const g = 5n;
-        const p = 1000000007n;
-        const x_bi = BigInt(x);
-
-        const y = power(g, x_bi, p);
-
-        const r_val = Math.floor(Math.random() * 1000);
-        const r = BigInt(r_val);
-        const t = power(g, r, p);
-
-        const c_val = Math.floor(Math.random() * 100);
-        const c = BigInt(c_val);
-
-        const s = r + (c * x_bi);
-
-        const log = document.getElementById('zkp-log');
-        log.innerHTML = `
-            <div style="color:#22d3ee">1. Prover (You): Knows x=${x}. Sends y=${y}.</div>
-            <div style="color:#a78bfa">2. Prover Commits: r=${r}, t=${t}.</div>
-            <div style="color:#f43f5e">3. Verifier Challenges: c=${c}.</div>
-            <div style="color:#22d3ee">4. Prover Responds: s = r + c*x = ${s}.</div>
-            <div style="color:#fff">Sending proof to Server...</div>
-        `;
-
-        try {
-            const res = await fetch('/api/lab/zkp/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    y: Number(y), t: Number(t), c: Number(c), s: Number(s), g: Number(g), p: Number(p)
-                })
-            });
-            const d = await res.json();
-            const resBox = document.getElementById('zkp-result');
-            resBox.innerText = d.valid ? "VALID" : "INVALID";
-            resBox.style.color = d.valid ? "#07ffe9" : "#f43f5e";
-            log.innerHTML += `<div style="color:${d.valid ? '#07ffe9' : '#f43f5e'}">Result: ${d.message}</div>`;
-        } catch (e) {
-            console.error(e);
-            log.innerHTML += `<div style="color:red">Error contacting backend</div>`;
-        }
-    };
-
-    function power(base, exponent, modulus) {
-        if (modulus === 1n) return 0n;
-        let result = 1n;
-        base = base % modulus;
-        while (exponent > 0n) {
-            if (exponent % 2n === 1n) result = (result * base) % modulus;
-            exponent = exponent / 2n;
-            base = (base * base) % modulus;
-        }
-        return result;
-    }
-
-    window.runLabPki = async function () {
-        const cn = document.getElementById('pki-cn').value;
-        if (!cn) return alert("Enter Common Name!");
-
-        const btn = event.target;
-        const originalText = btn.innerText;
-        btn.disabled = true; btn.innerText = "Issuing...";
-
-        try {
-            const res = await fetch('/api/lab/pki/issue', {
-                method: 'POST', body: JSON.stringify({ common_name: cn }), headers: { 'Content-Type': 'application/json' }
-            });
-            const d = await res.json();
-
-            document.getElementById('pki-key-out').value = d.private_key;
-            document.getElementById('pki-cert-out').value = d.certificate;
-
-        } catch (e) { alert("Error issuing cert"); }
-
-        btn.disabled = false; btn.innerText = originalText;
-    };
-
 });
+
+window.showModal = function (msg, title = "Notification") {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-message').textContent = msg;
+    const overlay = document.getElementById('custom-modal');
+    overlay.classList.add('active');
+};
+
+window.closeModal = function () {
+    document.getElementById('custom-modal').classList.remove('active');
+};
+
+
+function downloadStegoImage() {
+    const canvas = document.getElementById('stego-canvas-target');
+    const link = document.createElement('a');
+    link.download = 'stego_result.png';
+    try {
+        link.href = canvas.toDataURL();
+        link.click();
+    } catch (e) {
+        showModal("Could not download image. Ensure an image has been generated.", "Error");
+    }
+}
+window.downloadStegoImage = downloadStegoImage; 
+
+
+window.textToBits = function (text) {
+    const encoder = new TextEncoder();
+    const bytes = encoder.encode(text);
+    let bits = "";
+    for (let i = 0; i < bytes.length; i++) {
+        bits += bytes[i].toString(2).padStart(8, '0');
+    }
+    bits += "00000000";
+    return bits;
+}
+
+window.bitsToText = function (bits) {
+    const bytes = [];
+    for (let i = 0; i < bits.length; i += 8) {
+        const byte = parseInt(bits.substr(i, 8), 2);
+        if (byte === 0) break;
+        bytes.push(byte);
+    }
+    const decoder = new TextDecoder();
+    return decoder.decode(new Uint8Array(bytes));
+}
+
+window.encodeStegoLogic = function (data, text) {
+    const bin = window.textToBits(text);
+    if (bin.length > data.length / 4) {
+        throw new Error("Text too long for this image!");
+    }
+    let binIdx = 0;
+    for (let i = 0; i < data.length; i += 4) {
+        for (let j = 0; j < 3; j++) {
+            if (binIdx < bin.length) {
+                data[i + j] = (data[i + j] & 0xFE) | parseInt(bin[binIdx++]);
+            }
+        }
+    }
+    return data;
+}
+
+window.decodeStegoLogic = function (data) {
+    let bits = "";
+    const maxBits = 80000;
+    for (let i = 0; i < data.length; i += 4) {
+        for (let j = 0; j < 3; j++) {
+            if (bits.length >= maxBits) break;
+            bits += (data[i + j] & 1);
+        }
+        if (bits.length >= maxBits) break;
+    }
+    return window.bitsToText(bits);
+}
+
+function runLabStegoEncode() {
+    const text = document.getElementById('stego-text').value;
+    if (!text) return showModal("Enter text!", "Input Error");
+
+    const src = document.getElementById('stego-canvas-source');
+    if (src.style.display === 'none') return showModal("Upload image first!", "Missing Image");
+
+    const ctx = src.getContext('2d', { willReadFrequently: true });
+    const imgData = ctx.getImageData(0, 0, src.width, src.height);
+
+    try {
+        window.encodeStegoLogic(imgData.data, text);
+
+        const target = document.getElementById('stego-canvas-target');
+        const tCtx = target.getContext('2d', { willReadFrequently: true });
+        tCtx.putImageData(imgData, 0, 0);
+        showModal("Encoded! The image on the right contains your secret.", "Success");
+    } catch (e) {
+        showModal(e.message, "Error");
+    }
+}
+window.runLabStegoEncode = runLabStegoEncode;
+
+function runLabStegoDecode() {
+    const src = document.getElementById('stego-canvas-source');
+    if (!src || src.style.display === 'none') return showModal("Upload image!", "Missing Image");
+
+    const ctx = src.getContext('2d', { willReadFrequently: true });
+    const imgData = ctx.getImageData(0, 0, src.width, src.height);
+
+    const text = window.decodeStegoLogic(imgData.data);
+
+    if (text.length > 0) {
+        showModal("Found Message: " + text, "Decoded Secret");
+    } else {
+        showModal("No hidden message detected (or message is empty).", "Result");
+    }
+}
+window.runLabStegoDecode = runLabStegoDecode;
+
+window.runLabZkp = async function () {
+    const x = parseInt(document.getElementById('zkp-secret').value);
+    if (!x) return alert("Enter a  secret x!");
+
+    const g = 5n;
+    const p = 1000000007n;
+    const x_bi = BigInt(x);
+
+    const y = power(g, x_bi, p);
+
+    const r_val = Math.floor(Math.random() * 1000);
+    const r = BigInt(r_val);
+    const t = power(g, r, p);
+
+    const c_val = Math.floor(Math.random() * 100);
+    const c = BigInt(c_val);
+
+    const s = r + (c * x_bi);
+
+    const log = document.getElementById('zkp-log');
+    log.innerHTML = '';
+
+    const div1 = document.createElement('div');
+    div1.style.color = '#22d3ee';
+    div1.textContent = `1. Prover (You): Knows x=${x}. Sends y=${y}.`;
+    log.appendChild(div1);
+
+    const div2 = document.createElement('div');
+    div2.style.color = '#a78bfa';
+    div2.textContent = `2. Prover Commits: r=${r}, t=${t}.`;
+    log.appendChild(div2);
+
+    const div3 = document.createElement('div');
+    div3.style.color = '#f43f5e';
+    div3.textContent = `3. Verifier Challenges: c=${c}.`;
+    log.appendChild(div3);
+
+    const div4 = document.createElement('div');
+    div4.style.color = '#22d3ee';
+    div4.textContent = `4. Prover Responds: s = r + c*x = ${s}.`;
+    log.appendChild(div4);
+
+    const div5 = document.createElement('div');
+    div5.style.color = '#fff';
+    div5.textContent = 'Sending proof to Server...';
+    log.appendChild(div5);
+
+    try {
+        const res = await fetch('/api/lab/zkp/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                y: Number(y), t: Number(t), c: Number(c), s: Number(s), g: Number(g), p: Number(p)
+            })
+        });
+        const d = await res.json();
+        const resBox = document.getElementById('zkp-result');
+        resBox.innerText = d.valid ? "VALID" : "INVALID";
+        resBox.style.color = d.valid ? "#07ffe9" : "#f43f5e";
+
+        const resDiv = document.createElement('div');
+        resDiv.style.color = d.valid ? '#07ffe9' : '#f43f5e';
+        resDiv.textContent = `Result: ${d.message}`;
+        log.appendChild(resDiv);
+
+    } catch (e) {
+        console.error(e);
+        const errDiv = document.createElement('div');
+        errDiv.style.color = 'red';
+        errDiv.textContent = 'Error contacting backend';
+        log.appendChild(errDiv);
+    }
+};
+
+function power(base, exponent, modulus) {
+    if (modulus === 1n) return 0n;
+    let result = 1n;
+    base = base % modulus;
+    while (exponent > 0n) {
+        if (exponent % 2n === 1n) result = (result * base) % modulus;
+        exponent = exponent / 2n;
+        base = (base * base) % modulus;
+    }
+    return result;
+}
+
+window.runLabPki = async function () {
+    const cn = document.getElementById('pki-cn').value;
+    if (!cn) return alert("Enter Common Name!");
+
+    const btn = event.target;
+    const originalText = btn.innerText;
+    btn.disabled = true; btn.innerText = "Issuing...";
+
+    try {
+        const res = await fetch('/api/lab/pki/issue', {
+            method: 'POST', body: JSON.stringify({ common_name: cn }), headers: { 'Content-Type': 'application/json' }
+        });
+        const d = await res.json();
+
+        document.getElementById('pki-key-out').value = d.private_key;
+        document.getElementById('pki-cert-out').value = d.certificate;
+
+    } catch (e) { alert("Error issuing cert"); }
+
+    btn.disabled = false; btn.innerText = originalText;
+};
+
+

@@ -329,7 +329,7 @@
                     </div>
                     <p class="desc">Hide secret messages within image pixels using Least Significant Bit (LSB)
                         modification. Detectable only by statistical analysis.</p>
-                    <div class="workflow-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="workflow-grid" style="grid-template-columns: 1fr;">
                         <div>
                             <h4>1. Select Cover Image</h4>
                             <div class="drop-zone" id="stego-drop-zone"
@@ -346,15 +346,22 @@
                             <input type="text" id="stego-text" class="hacker-input"
                                 placeholder="Enter top secret data...">
                             <div style="margin-top:10px; display:flex; gap:10px;">
-                                <button class="btn-action" onclick="runLabStegoEncode()">🔒 Encode & Hide</button>
-                                <button class="btn-subtle" onclick="runLabStegoDecode()">🔓 Decode</button>
+                                <button id="btn-stego-encode" class="btn-action" onclick="runLabStegoEncode()">🔒 Encode
+                                    & Hide</button>
+                                <button id="btn-stego-decode" class="btn-subtle" onclick="runLabStegoDecode()">🔓
+                                    Decode</button>
                             </div>
                         </div>
                     </div>
                     <div style="margin-top:20px;">
                         <h4>3. Result (Stego-Image)</h4>
-                        <p class="small-desc">Right-click to save. Looks identical to original.</p>
+                        <p class="small-desc">Right-click to save or use the download button. Looks identical to
+                            original.</p>
                         <canvas id="stego-canvas-target" style="max-width:100%; border:1px solid #333;"></canvas>
+                        <div style="margin-top: 10px;">
+                            <button id="btn-download-stego" class="btn-subtle" onclick="downloadStegoImage()">💾
+                                Download Image</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -444,8 +451,8 @@
                             <small>Transmitted</small>
                         </div>
                     </div>
-                    <div
-                        style="flex:1; position:relative; min-height:400px; margin-top:20px; border:1px solid #333; overflow:hidden; border-radius:8px; background:rgba(0,0,0,0.3);">
+                    <div class="chart-container"
+                        style="flex:1; position:relative; border:1px solid #333; overflow:hidden; border-radius:8px; background:rgba(0,0,0,0.3);">
                         <canvas id="net-chart" style="width: 100%; height: 100%; display:block;"></canvas>
                         <div class="grid-overlay"></div>
                     </div>
@@ -457,17 +464,19 @@
                         <h3>System Audit Log</h3>
                         <span class="badge">Real-time</span>
                     </div>
-                    <table style="width:100%; border-collapse:collapse; color:var(--text-dim); font-size:0.9rem;">
-                        <thead>
-                            <tr style="border-bottom:1px solid var(--border); text-align:left;">
-                                <th style="padding:10px;">Timestamp</th>
-                                <th style="padding:10px;">Event</th>
-                                <th style="padding:10px;">Status</th>
-                                <th style="padding:10px;">Detail</th>
-                            </tr>
-                        </thead>
-                        <tbody id="audit-table-body"></tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table style="width:100%; border-collapse:collapse; color:var(--text-dim); font-size:0.9rem;">
+                            <thead>
+                                <tr style="border-bottom:1px solid var(--border); text-align:left;">
+                                    <th style="padding:10px;">Timestamp</th>
+                                    <th style="padding:10px;">Event</th>
+                                    <th style="padding:10px;">Status</th>
+                                    <th style="padding:10px;">Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody id="audit-table-body"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div id="tab-health" class="tab-content">
@@ -642,13 +651,102 @@
                                     backend.</li>
                             </ul>
                         </div>
+
+                        <!-- New Sections -->
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">5. 👁️ Steganography</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Hide secrets inside images
+                                (LSB Encoding).</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li><b>Encode:</b> Drag & drop an image -> Enter secret text -> Click <b>Lock Encode &
+                                        Hide</b>.</li>
+                                <li><b>Decode:</b> With an image loaded, click <b>Unlock Decode</b> to reveal hidden
+                                    messages.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">6. 🎭 Zero Knowledge Proof (ZKP)</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Prove you know a secret
+                                without revealing it (Fiat-Shamir).</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li>Enter a number (Secret x).</li>
+                                <li>Click <b>Start Proof</b>.</li>
+                                <li>Observe the interactive exchange where the Server verifies your knowledge
+                                    mathematically without ever seeing x.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">7. 📜 Quantum PKI</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Issue X.509 Certificates.
+                            </p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li>Enter a Common Name (e.g. site.com).</li>
+                                <li>Click <b>Issue Certificate</b> to generate a valid certificate signed by the lab's
+                                    Root CA.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">8. # Hash Studio</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Analyze cryptographic hash
+                                functions.</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li>Type any text.</li>
+                                <li>Choose an algorithm (SHA-256, SHA3, etc.).</li>
+                                <li>Observe how 1 character change alters the entire hash (Avalanche Effect).</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">9. K AES Lab</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Symmetric Encryption
+                                (AES-CTR).</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li>Enter a message.</li>
+                                <li>Click <b>Random Key/IV</b> to generate parameters.</li>
+                                <li>Click <b>Encrypt</b> to see the ciphertext hex.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">10. M HMAC Auth</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Message Authentication
+                                Codes.</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li>Enter Message and Secret Key.</li>
+                                <li>Generate the MAC tag used to verify integrity.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">11. P Password Audit</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Compare Classical vs Quantum
+                                Cracking speeds.</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li>Enter a password.</li>
+                                <li>See how long it takes to crack with Brute Force vs Grover's Algorithm.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">12. E Entropy Visualizer</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: View system randomness.</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li>Click <b>Capture Entropy</b>.</li>
+                                <li>See the raw hex from <code>/dev/urandom</code> and the byte distribution chart.</li>
+                            </ul>
+                        </div>
+
                         <div style="margin-bottom: 2rem; border-top:1px solid var(--border); padding-top:1rem;">
-                            <h4 style="color: var(--accent);">5. 🔬 Recommended Experiments</h4>
+                            <h4 style="color: var(--accent);">13. 🔬 Recommended Experiments</h4>
                             <ul
                                 style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px; line-height: 1.6;">
                                 <li><b>MITM Simulation:</b> In Digital Identity, try tampering with the text
                                     <i>after</i> signing but <i>before</i> verifying to see how the signature check
-                                    fails.</li>
+                                    fails.
+                                </li>
                                 <li><b>Policy Impact:</b> Go to Access Control, disable <b>"Allow PQC Handshake"</b>,
                                     and try to Negotiate Keys in Tab 1. Observe the immediate failure.</li>
                                 <li><b>Traffic Analysis:</b> Open the <b>Network Guard</b> tab alongside <b>PQ-Drop</b>.
@@ -662,8 +760,23 @@
             </div>
         </main>
     </div>
+
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Notification</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modal-message"></div>
+            <div class="modal-footer">
+                <button class="btn-action small" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/static/script.js"></script>
+    <script src="/static/script.js?v=2"></script>
 </body>
 
 </html>
