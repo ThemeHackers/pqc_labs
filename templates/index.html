@@ -158,6 +158,8 @@
                                 <div class="node-icon"
                                     style="border-color:#f43f5e; width:50px; height:50px; font-size:1.2rem;">🕵️</div>
                                 <h4 style="color:#f43f5e; font-size:0.8rem; margin-top:5px;">Hacker</h4>
+                                <button id="btn-dos-attack" class="btn-danger"
+                                    style="font-size:0.6rem; padding:2px 5px; margin-top:5px;">✂ CUT WIRE</button>
                             </div>
                             <button id="btn-exchange" class="btn-action btn-pulse">⚡ Negotiate Keys</button>
                         </div>
@@ -403,7 +405,12 @@
                             <h4>1. Prover (You)</h4>
                             <input type="number" id="zkp-secret" class="hacker-input"
                                 placeholder="Enter Secret x (1-100)">
-                            <button class="btn-action" onclick="runLabZkp()">🚀 Start Proof</button>
+                            <div style="display:flex; gap:10px; margin-top:10px;">
+                                <button class="btn-action" onclick="runLabZkp()">🚀 Start Proof</button>
+                                <button class="btn-danger" id="btn-zkp-impersonate">🎭 Impersonate (Cheat)</button>
+                            </div>
+                            <div id="hacker-zkp-log"
+                                style="color:#f43f5e; font-family:monospace; margin-top:5px; font-size:0.8rem;"></div>
                         </div>
                         <div class="step-card">
                             <h4>2. Protocol Flow</h4>
@@ -487,8 +494,14 @@
 Transaction 2
 Transaction 3
 Transaction 4</textarea>
-                            <button class="btn-action" onclick="runLabMerkle()" style="margin-top:10px;">🌳 Build Hash
-                                Tree</button>
+                            <div style="display:flex; gap:10px; margin-top:10px;">
+                                <button class="btn-action" onclick="runLabMerkle()" style="flex:1;">🌳 Build Hash
+                                    Tree</button>
+                                <button class="btn-danger" id="btn-merkle-tamper" style="flex:1;">😈 Tamper Data
+                                    (Hacker)</button>
+                            </div>
+                            <div id="hacker-merkle-log"
+                                style="color:#f43f5e; font-family:monospace; margin-top:5px; font-size:0.8rem;"></div>
                         </div>
                         <div class="step-card full-width">
                             <h4>2. Merkle Root & Structure</h4>
@@ -624,6 +637,19 @@ Transaction 4</textarea>
                         <div class="grid-overlay"></div>
                     </div>
                 </div>
+                <div class="step-card hacker-zone content-full-width" style="margin-top: 1rem;">
+                    <div class="hacker-header">
+                        <div class="step-num" style="color: rgba(244, 63, 94, 0.5);">🕷️</div>
+                        <h4>Traffic Analysis (Hacker View)</h4>
+                    </div>
+                    <p class="small-desc">Analyze metadata (packet size, timing) to infer content type.</p>
+                    <div
+                        style="display:flex; align-items:center; justify-content:space-between; background:#000; padding:15px; border-radius:6px;">
+                        <div style="color:#0ea5e9;">Current Inference:</div>
+                        <div id="hacker-net-inference" style="color:#f43f5e; font-family:monospace; font-weight:bold;">
+                            LISTENING...</div>
+                    </div>
+                </div>
             </div>
             <div id="tab-audit" class="tab-content">
                 <div class="card glass-panel">
@@ -756,6 +782,21 @@ Transaction 4</textarea>
                             <small>Strength Score</small>
                         </div>
                     </div>
+                    <div class="step-card hacker-zone content-full-width" style="margin-top: 2rem;">
+                        <div class="hacker-header">
+                            <div class="step-num" style="color: rgba(244, 63, 94, 0.5);">💀</div>
+                            <h4>Brute Force Attack (Hacker View)</h4>
+                        </div>
+                        <p class="small-desc">Simulate a dictionary attack against this password.</p>
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <button id="btn-hacker-crack" class="btn-danger">😈 Start Dictionary Attack</button>
+                            <div class="code-block"
+                                style="background:#000; padding:15px; border:1px solid #333; font-family:'Courier New', monospace; font-size:0.8rem; height: 100px; overflow-y:auto;"
+                                id="hacker-crack-log">
+                                <span style="color:#555;">> Waiting for target...</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="tab-entropy" class="tab-content">
@@ -782,144 +823,114 @@ Transaction 4</textarea>
                             <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Securely negotiate a Shared
                                 Secret immune to quantum decryption.</p>
                             <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li>Click <b>⚡ Negotiate Keys</b>.</li>
-                                <li>Watch the animation: Alice sends Public Key -> Bob sends Encapsulated Key.</li>
-                                <li>Green Status = Success (Both parties share the same secret).</li>
+                                <li>Click <b>⚡ Negotiate Keys</b> to run the protocol.</li>
+                                <li><b>Hacker View:</b> Click <b>✂ CUT WIRE</b> to simulate a Denial of Service (DoS)
+                                    attack.</li>
+                                <li>Observe how the handshake fails when the connection is severed.</li>
                             </ul>
                         </div>
+
                         <div style="margin-bottom: 2rem;">
                             <h4 style="color: var(--primary);">2. 🪪 Digital Identity (ML-DSA-44)</h4>
                             <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Sign messages with a
                                 quantum-resistant digital signature.</p>
                             <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li><b>Step 1:</b> Click <b>Generate Keys</b> to issue a new identity.</li>
-                                <li><b>Step 2:</b> Type a message -> Click <b>Sign Data</b> to create a signature.</li>
-                                <li><b>Hacker Mode:</b> Edit text in the red box -> Click <b>Tamper</b>.</li>
-                                <li><b>Step 3:</b> Click <b>Verify Integrity</b> (Tampered data will show as Invalid).
-                                </li>
+                                <li>Click <b>Generate Keys</b>.</li>
+                                <li>Type a message and click <b>Sign Data</b>.</li>
+                                <li><b>Hacker View:</b> Enter modified text and click <b>😈 Tamper Data</b>.</li>
+                                <li>Click <b>Verify Integrity</b>. Tampered signatures will be rejected.</li>
                             </ul>
                         </div>
+
                         <div style="margin-bottom: 2rem;">
                             <h4 style="color: var(--primary);">3. 📦 PQ-Drop File Transfer</h4>
                             <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Transfer files using Hybrid
                                 Encryption (Kyber + AES).</p>
                             <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li>Click <b>Init Receiver</b> to open the secure channel.</li>
-                                <li>Select a file and click <b>Upload & Encrypt</b>.</li>
-                                <li>Click the ⬇️ download button in the list to decrypt and retrieve the file.</li>
-                            </ul>
-                        </div>
-                        <div style="margin-bottom: 2rem;">
-                            <h4 style="color: var(--primary);">4. 🛡️ Access & Vault</h4>
-                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li><b>Secure Vault:</b> Enter Name + Secret -> Click Enact to store in RAM (AES-256).
-                                </li>
-                                <li><b>Access Control:</b> Toggle policies to dynamically enforce restrictions on the
-                                    backend.</li>
+                                <li><b>Init Receiver</b> to generate keys.</li>
+                                <li>Upload a file to Encrypt & Send.</li>
+                                <li><b>Hacker View:</b> Observe "Deep Packet Inspection" logs showing metadata leakage
+                                    (Traffic Analysis).</li>
                             </ul>
                         </div>
 
-                        <!-- New Sections -->
                         <div style="margin-bottom: 2rem;">
-                            <h4 style="color: var(--primary);">5. 👁️ Steganography</h4>
-                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Hide secrets inside images
-                                (LSB Encoding).</p>
+                            <h4 style="color: var(--primary);">4. 📡 QKD (BB84) Protocol</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Distribute keys using
+                                quantum mechanics (photons).</p>
                             <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li><b>Encode:</b> Drag & drop an image -> Enter secret text -> Click <b>Lock Encode &
-                                        Hide</b>.</li>
-                                <li><b>Decode:</b> With an image loaded, click <b>Unlock Decode</b> to reveal hidden
-                                    messages.</li>
+                                <li>Click <b>Start QKD Sequence</b> to transmit photons.</li>
+                                <li><b>Hacker View:</b> Click <b>🕵️ ENABLE INTERCEPT ATTACK</b> to eavesdrop.</li>
+                                <li>Observe how measuring the photons introduces errors (noise) that Alice and Bob
+                                    detect.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">5. 🌳 Merkle Tree Explorer</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Verify data integrity using
+                                hash trees.</p>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li>Enter transactions and click <b>Build Hash Tree</b>.</li>
+                                <li><b>Hacker View:</b> Click <b>😈 Tamper Data</b> to corrupt a transaction.</li>
+                                <li>Notice how the <b>Root Hash</b> changes completely, alerting the network.</li>
                             </ul>
                         </div>
 
                         <div style="margin-bottom: 2rem;">
                             <h4 style="color: var(--primary);">6. 🎭 Zero Knowledge Proof (ZKP)</h4>
-                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Prove you know a secret
-                                without revealing it (Fiat-Shamir).</p>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Prove knowledge of a secret
+                                without revealing it.</p>
                             <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li>Enter a number (Secret x).</li>
-                                <li>Click <b>Start Proof</b>.</li>
-                                <li>Observe the interactive exchange where the Server verifies your knowledge
-                                    mathematically without ever seeing x.</li>
+                                <li>Enter a secret and click <b>Start Proof</b> to verify normally.</li>
+                                <li><b>Hacker View:</b> Click <b>🎭 Impersonate (Cheat)</b> to guess the response.</li>
+                                <li>See how the Verifier eventually catches the imposter (approx 50% chance per round).
+                                </li>
                             </ul>
                         </div>
 
                         <div style="margin-bottom: 2rem;">
-                            <h4 style="color: var(--primary);">7. 📜 Quantum PKI</h4>
-                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Issue X.509 Certificates.
-                            </p>
+                            <h4 style="color: var(--primary);">7. 🕸️ Lattice (LWE) Visualizer</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Visualize Learning With
+                                Errors hardness assumption.</p>
                             <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li>Enter a Common Name (e.g. site.com).</li>
-                                <li>Click <b>Issue Certificate</b> to generate a valid certificate signed by the lab's
-                                    Root CA.</li>
+                                <li>Click <b>Generate Noisy Data</b>.</li>
+                                <li>Try to visually determine the precise slope (secret) amidst the noise.</li>
                             </ul>
                         </div>
 
                         <div style="margin-bottom: 2rem;">
-                            <h4 style="color: var(--primary);">8. # Hash Studio</h4>
-                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Analyze cryptographic hash
-                                functions.</p>
-                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li>Type any text.</li>
-                                <li>Choose an algorithm (SHA-256, SHA3, etc.).</li>
-                                <li>Observe how 1 character change alters the entire hash (Avalanche Effect).</li>
-                            </ul>
-                        </div>
-
-                        <div style="margin-bottom: 2rem;">
-                            <h4 style="color: var(--primary);">9. K AES Lab</h4>
-                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Symmetric Encryption
-                                (AES-CTR).</p>
-                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li>Enter a message.</li>
-                                <li>Click <b>Random Key/IV</b> to generate parameters.</li>
-                                <li>Click <b>Encrypt</b> to see the ciphertext hex.</li>
-                            </ul>
-                        </div>
-
-                        <div style="margin-bottom: 2rem;">
-                            <h4 style="color: var(--primary);">10. M HMAC Auth</h4>
-                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Message Authentication
-                                Codes.</p>
-                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li>Enter Message and Secret Key.</li>
-                                <li>Generate the MAC tag used to verify integrity.</li>
-                            </ul>
-                        </div>
-
-                        <div style="margin-bottom: 2rem;">
-                            <h4 style="color: var(--primary);">11. P Password Audit</h4>
-                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Compare Classical vs Quantum
-                                Cracking speeds.</p>
+                            <h4 style="color: var(--primary);">8. 🔐 Password Audit</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Test password strength
+                                against classical and quantum attacks.</p>
                             <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
                                 <li>Enter a password.</li>
-                                <li>See how long it takes to crack with Brute Force vs Grover's Algorithm.</li>
+                                <li><b>Hacker View:</b> Click <b>😈 Start Dictionary Attack</b> to simulate a real-time
+                                    breach.</li>
+                                <li>Compare time-to-crack for Brute Force vs. Grover's Algorithm.</li>
                             </ul>
                         </div>
 
                         <div style="margin-bottom: 2rem;">
-                            <h4 style="color: var(--primary);">12. E Entropy Visualizer</h4>
-                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: View system randomness.</p>
+                            <h4 style="color: var(--primary);">9. 🛡️ Network Guard</h4>
+                            <p style="color: var(--text-dim); margin-bottom: 0.5rem;">Goal: Monitor network traffic and
+                                anomalies.</p>
                             <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
-                                <li>Click <b>Capture Entropy</b>.</li>
-                                <li>See the raw hex from <code>/dev/urandom</code> and the byte distribution chart.</li>
+                                <li>View real-time RX/TX graphs.</li>
+                                <li><b>Hacker View:</b> The "Traffic Analyzer" card attempts to infer activity types
+                                    (e.g., "File Upload Detected") based on packet size.</li>
                             </ul>
                         </div>
 
-                        <div style="margin-bottom: 2rem; border-top:1px solid var(--border); padding-top:1rem;">
-                            <h4 style="color: var(--accent);">13. 🔬 Recommended Experiments</h4>
-                            <ul
-                                style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px; line-height: 1.6;">
-                                <li><b>MITM Simulation:</b> In Digital Identity, try tampering with the text
-                                    <i>after</i> signing but <i>before</i> verifying to see how the signature check
-                                    fails.
-                                </li>
-                                <li><b>Policy Impact:</b> Go to Access Control, disable <b>"Allow PQC Handshake"</b>,
-                                    and try to Negotiate Keys in Tab 1. Observe the immediate failure.</li>
-                                <li><b>Traffic Analysis:</b> Open the <b>Network Guard</b> tab alongside <b>PQ-Drop</b>.
-                                    Upload a large file and observe the real-time TX/RX spike in the graph.</li>
-                                <li><b>Audit Trail:</b> After performing multiple actions, check the <b>Audit Trail</b>
-                                    to see a chronological log of your security events.</li>
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--primary);">10. 🛠️ Standard Labs</h4>
+                            <ul style="color: var(--text-main); font-size: 0.9rem; margin-left: 20px;">
+                                <li><b>Secure Vault:</b> Store secrets in AES-256 encrypted memory.</li>
+                                <li><b>Steganography:</b> Hide secrets in images (LSB).</li>
+                                <li><b>Quantum PKI:</b> Issue X.509 certificates.</li>
+                                <li><b>Hash Studio:</b> Experiment with SHA-256, SHA-3, etc.</li>
+                                <li><b>AES & HMAC:</b> Basic symmetric encryption and integrity checks.</li>
+                                <li><b>Entropy:</b> Visualize system randomness.</li>
                             </ul>
                         </div>
                     </div>
