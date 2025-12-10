@@ -10,7 +10,7 @@
 
 1. **Clone and Navigate**
    ```bash
-   git clone https://github.com/ThemeHackers/pqc_labs
+   git clone <your-repository-url>
    cd pqc_labs
    ```
 
@@ -40,10 +40,14 @@
 Run the test suite to ensure everything works:
 
 ```bash
+# Using pytest (recommended)
+pytest test_app.py -v
+
+# Or run directly
 python3 test_app.py
 ```
 
-Expected output: `Test Results: 10/10 passed`
+Expected output: `Test Results: 10/10 passed` or `10 passed` with pytest
 
 ## 📚 Key Features Overview
 

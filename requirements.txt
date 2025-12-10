@@ -4,3 +4,5 @@ cryptography
 pqcrypto 
 psutil 
 jinja2
+pytest
+pytest-asyncio

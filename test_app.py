@@ -1,8 +1,15 @@
 """
 Test Suite for Quantum Shield PQC Labs
 Validates core functionality of the FastAPI application
+
+Run with pytest:
+    pytest test_app.py -v
+
+Or run directly:
+    python test_app.py
 """
 
+import pytest
 from fastapi.testclient import TestClient
 from app import app
 

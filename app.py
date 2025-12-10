@@ -6,7 +6,7 @@ from pydantic import BaseModel
 import sys
 import os
 import random
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import hashlib
 import hmac
@@ -17,7 +17,6 @@ from cryptography import x509
 from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
-from datetime import timedelta
 try:
     from pqcrypto.kem import ml_kem_512
     from pqcrypto.sign import ml_dsa_44
@@ -60,7 +59,7 @@ class DecryptRequest(BaseModel):
     secret_key_hex: str
 @app.get("/")
 async def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
 audit_log = []
 def log_event(event_type: str, status: str, detail: str):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -389,8 +388,8 @@ try:
         .issuer_name(pki_ca_subject)
         .public_key(pki_ca_key.public_key())
         .serial_number(x509.random_serial_number())
-        .not_valid_before(datetime.utcnow())
-        .not_valid_after(datetime.utcnow() + timedelta(days=3650))
+        .not_valid_before(datetime.now(timezone.utc))
+        .not_valid_after(datetime.now(timezone.utc) + timedelta(days=3650))
         .add_extension(x509.BasicConstraints(ca=True, path_length=None), critical=True)
         .sign(pki_ca_key, hashes.SHA256(), default_backend())
     )
@@ -426,8 +425,8 @@ async def lab_pki_issue(req: PkiSignRequest):
         .issuer_name(pki_ca_subject)
         .public_key(user_key.public_key())
         .serial_number(x509.random_serial_number())
-        .not_valid_before(datetime.utcnow())
-        .not_valid_after(datetime.utcnow() + timedelta(days=365))
+        .not_valid_before(datetime.now(timezone.utc))
+        .not_valid_after(datetime.now(timezone.utc) + timedelta(days=365))
         .sign(pki_ca_key, hashes.SHA256(), default_backend())
     )
     cert_pem = cert.public_bytes(serialization.Encoding.PEM).decode()
