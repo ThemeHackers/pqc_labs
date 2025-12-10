@@ -531,3 +531,196 @@ async def lab_pki_issue(req: PkiSignRequest):
         "private_key": key_pem,
         "issuer": "Quantum Shield Root CA"
     }
+
+# --- NEW PQC & QUANTUM LABS ---
+
+# 1. LATICE LWE GENERATOR
+class LweRequest(BaseModel):
+    dimension: int
+
+@app.post("/api/lab/lwe/gen")
+async def lab_lwe_gen(req: LweRequest):
+    # Simulate LWE sample: b = A*s + e
+    # For visualization (2D), we simplify.
+    # Returns a set of points that roughly form a line (1D) or plane (simulated) with noise
+    import random
+    points = []
+    slope = random.randint(1, 10)
+    intercept = random.randint(0, 50)
+    
+    for x in range(20):
+        # Good line
+        y_ideal = slope * x + intercept
+        # Add "Error" (simulating noise e)
+        noise = random.randint(-15, 15) 
+        y_noisy = y_ideal + noise
+        points.append({"x": x, "y": y_noisy, "y_ideal": y_ideal, "noise": noise})
+        
+    return {"points": points, "secret_slope": slope, "intercept": intercept}
+
+# 2. MERKLE TREE HASHING
+class MerkleRequest(BaseModel):
+    leaves: list
+
+@app.post("/api/lab/merkle/build")
+async def lab_merkle_build(req: MerkleRequest):
+    leaves = [hashlib.sha256(leaf.encode()).hexdigest() for leaf in req.leaves]
+    if not leaves: return {"tree": []}
+    
+    tree_levels = [leaves]
+    
+    current_level = leaves
+    while len(current_level) > 1:
+        next_level = []
+        for i in range(0, len(current_level), 2):
+            left = current_level[i]
+            if i + 1 < len(current_level):
+                right = current_level[i+1]
+                combined = left + right
+            else:
+                right = left # Duplicate last if odd
+                combined = left + right
+            
+            parent = hashlib.sha256(combined.encode()).hexdigest()
+            next_level.append(parent)
+        current_level = next_level
+        tree_levels.append(current_level)
+        
+    return {"levels": tree_levels, "root": tree_levels[-1][0]}
+
+class MerkleProofRequest(BaseModel):
+    leaves: list
+    target_index: int
+
+@app.post("/api/lab/merkle/proof")
+async def lab_merkle_proof(req: MerkleProofRequest):
+    leaves = [hashlib.sha256(leaf.encode()).hexdigest() for leaf in req.leaves]
+    if not leaves or req.target_index >= len(leaves):
+        return {"error": "Invalid index or empty tree"}
+    
+    proof = []
+    current_level = leaves
+    index = req.target_index
+    
+    while len(current_level) > 1:
+        level_len = len(current_level)
+        is_right_child = (index % 2 == 1)
+        sibling_index = index - 1 if is_right_child else index + 1
+        
+        if sibling_index < level_len:
+            sibling_hash = current_level[sibling_index]
+            position = "left" if is_right_child else "right" # Sibling's position relative to current
+            proof.append({"hash": sibling_hash, "position": position})
+        else:
+            # Sibling doesn't exist (odd number of nodes), duplicate current
+            # For proof, usually we imply duplication.
+            # But let's verify logic: if last node is duplicated, its sibling is ITSELF? 
+            # Or usually implementation dependent.
+            # In our build logic: right = left (duplicate). 
+            # So if we are the last odd one (index = last), sibling index would be out of bounds.
+            # Wait, if i is even and i+1 >= len, right = left.
+            # If we are at i (even), sibling is i+1 (doesn't exist). So we need 'left' (ourselves) to combine?
+            # Actually, standard Merkle approach often duplicates.
+            # Let's say we have A, B, C.
+            # H(A,B) -> AB.
+            # H(C, C) -> CC.
+            # Root = H(AB, CC).
+            # Proof for C (index 2):
+            # Level 0 (Leaves): [A, B, C].
+            # C is at 2 (even). Sibling at 3. 3 >= len.
+            # Code says: right = left. So we combine C with C.
+            # So sibling is C itself? Or commonly we just say "Duplicate".
+            # Let's handle it: Just send the hash of C itself if sibling is missing, OR don't send anything and client knows?
+            # Let's stick to explicitly sending the hash used to combine.
+            # In build: combined = left + right. If right missing, right=left.
+            # So if we are 'left' (even) and no 'right', our partner is 'left' (ourselves).
+            proof.append({"hash": current_level[index], "position": "right"}) # Duplicate self on right
+
+        # Move to next level
+        next_level = []
+        for i in range(0, len(current_level), 2):
+            left = current_level[i]
+            right = current_level[i+1] if i + 1 < len(current_level) else left
+            parent = hashlib.sha256((left + right).encode()).hexdigest()
+            next_level.append(parent)
+        
+        current_level = next_level
+        index //= 2
+        
+    return {"proof": proof, "target_hash": leaves[req.target_index], "root": current_level[0]}
+
+# 3. GROVER'S ORACLE (Simulation Backend)
+class GroverCheck(BaseModel):
+    target_id: int
+    query_id: int
+
+@app.post("/api/lab/grover/check")
+async def lab_grover_check(req: GroverCheck):
+    # In a real quantum computer, this would be an oracle circuit.
+    # Here we just verify the "measurement"
+    is_match = (req.query_id == req.target_id)
+    return {"match": is_match}
+
+# 4. SHOR'S PERIOD FINDING (Classical Helper)
+class ShaoRequest(BaseModel):
+    a: int
+    N: int
+
+@app.post("/api/lab/shor/period")
+async def lab_shor_period(req: ShaoRequest):
+    # Find period r such that a^r % N == 1
+    # Brute force for small N (demo)
+    a, N = req.a, req.N
+    if math.gcd(a, N) != 1:
+        return {"error": "a and N must be coprime"}
+        
+    r = 1
+    vals = []
+    limit = 100
+    while r < limit:
+        val = pow(a, r, N)
+        vals.append(val)
+        if val == 1:
+            break
+        r += 1
+        
+    if r == limit:
+        return {"found": False, "limit_reached": True}
+        
+    # Attempt factoring if even
+    factors = []
+    if r % 2 == 0:
+        x = pow(a, r//2, N)
+        f1 = math.gcd(x - 1, N)
+        f2 = math.gcd(x + 1, N)
+        factors = [f1, f2]
+        
+    return {
+        "period_r": r, 
+        "sequence": vals, 
+        "factors_candidate": factors
+    }
+
+# 5. QKD (BB84) - Backend could verify bases
+class QkdBasisRequest(BaseModel):
+    alice_bases: str # e.g. "+x+x" (+ = rectilinear, x = diagonal)
+    bob_bases: str 
+    bits: str
+
+@app.post("/api/lab/qkd/sift")
+async def lab_qkd_sift(req: QkdBasisRequest):
+    sifted_key = ""
+    match_indices = []
+    
+    # Simple string comparison
+    length = min(len(req.alice_bases), len(req.bob_bases))
+    for i in range(length):
+        if req.alice_bases[i] == req.bob_bases[i]:
+            sifted_key += req.bits[i]
+            match_indices.append(i)
+            
+    return {
+        "sifted_key": sifted_key,
+        "match_indices": match_indices,
+        "match_count": len(match_indices)
+    }

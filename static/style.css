@@ -925,3 +925,47 @@ select {
     border-top: 1px solid var(--border);
     text-align: right;
 }
+
+@keyframes moveRight {
+    0% {
+        left: 0;
+        opacity: 1;
+        transform: translateY(-150%) translateX(0);
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 100%;
+        opacity: 0;
+        transform: translateY(-150%) translateX(-100%);
+    }
+}
+
+@keyframes moveLeft {
+    0% {
+        left: 100%;
+        opacity: 1;
+        transform: translateY(50%) translateX(0);
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 0;
+        opacity: 0;
+        transform: translateY(50%) translateX(-100%);
+    }
+}
+
+.packet.animate-right {
+    animation: moveRight 1.5s ease-in-out forwards;
+}
+
+.packet.animate-left {
+    animation: moveLeft 1.5s ease-in-out forwards;
+}

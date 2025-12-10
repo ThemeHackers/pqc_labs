@@ -23,6 +23,11 @@ Interactive educational labs to explore core concepts:
 *   **Entropy Analysis**: Visualize randomness and distribution from system entropy sources.
 *   **Zero-Knowledge Proofs (ZKP)**: Verify discrete-log based proofs (Chaum-Pedersen).
 *   **PKI**: Issue X.509 certificates signed by a local "Quantum Shield Root CA".
+*   **Lattice-based Cryptography (LWE)**: Visualize Learning With Errors (LWE) samples and noise.
+*   **Merkle Trees**: Build hash trees and verify inclusion proofs.
+*   **Grover's Algorithm**: Simulate quantum oracle checks for search problems.
+*   **Shor's Algorithm**: Demonstrate period finding and integer factorization.
+*   **Quantum Key Distribution (QKD)**: Simulate BB84 protocol basis sifting and key generation.
 
 ### System Monitoring
 *   **Health Dashboard**: Real-time CPU, RAM, Disk usage, and Entropy levels.

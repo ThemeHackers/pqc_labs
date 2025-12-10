@@ -39,6 +39,21 @@
                 <button class="nav-item" data-tab="tab-pki">
                     <span class="icon">📜</span> Quantum PKI
                 </button>
+                <button class="nav-item" data-tab="tab-lwe">
+                    <span class="icon">🕸️</span> Lattice (LWE)
+                </button>
+                <button class="nav-item" data-tab="tab-merkle">
+                    <span class="icon">🌳</span> Merkle Trees
+                </button>
+                <button class="nav-item" data-tab="tab-grover">
+                    <span class="icon">🔎</span> Grover's Search
+                </button>
+                <button class="nav-item" data-tab="tab-shor">
+                    <span class="icon">📅</span> Shor's Period
+                </button>
+                <button class="nav-item" data-tab="tab-qkd">
+                    <span class="icon">📡</span> QKD (BB84)
+                </button>
                 <button class="nav-item" data-tab="tab-hash">
                     <span class="icon">#</span> Hash Studio
                 </button>
@@ -363,6 +378,16 @@
                                 Download Image</button>
                         </div>
                     </div>
+                    <div style="margin-top:20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                        <h4>4. 🕵️ Bit Plane Analyzer</h4>
+                        <p class="small-desc">Select a bit plane to visualize. Hidden data lives in Bit 0 (LSB).</p>
+                        <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;">
+                            <label>Bit: <span id="val-bit-plane" style="color:var(--primary); font-weight:bold;">0
+                                    (LSB)</span></label>
+                            <input type="range" id="range-bit-plane" min="0" max="7" value="0" style="flex:1;">
+                        </div>
+                        <canvas id="stego-canvas-analyzer" style="max-width:100%; border:1px solid #333;"></canvas>
+                    </div>
                 </div>
             </div>
             <div id="tab-zkp" class="tab-content">
@@ -425,10 +450,152 @@
                     </div>
                 </div>
             </div>
+            <!-- NEW PQC LABS - REFACTORED VERTICAL LAYOUT -->
+            <div id="tab-lwe" class="tab-content">
+                <div class="card glass-panel" style="display:flex; flex-direction:column; gap:1.5rem;">
+                    <div class="card-header">
+                        <h3>Lattice & LWE Visualizer</h3>
+                        <span class="badge">Kyber Foundation</span>
+                    </div>
+                    <p class="desc">Learning With Errors (LWE): Finding the secret structure (line) becomes
+                        computationally hard when random "noise" is added. This hardness protects Kyber (ML-KEM).</p>
+                    <button class="btn-action" onclick="runLabLwe()">📉 Generate Noisy Data</button>
+                    <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px;">
+                        <canvas id="lwe-chart" style="max-height:400px; display:block; width:100%;"></canvas>
+                        <p class="small-desc" style="text-align:center; margin-top:10px;">Red dots = Noisy Public Data.
+                            Blue line = Secret Key. Recovering Blue from Red is hard!</p>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Secret Slope</h4>
+                        <div class="metric-value" id="lwe-slope">?</div>
+                        <small>Recovered via Lattice Reduction (LLL) (Not simulated here)</small>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-merkle" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>Merkle Tree Explorer</h3>
+                        <span class="badge">SPHINCS+ Foundation</span>
+                    </div>
+                    <p class="desc">Hash-based signatures use a Merkle Tree to verify many One-Time Signatures (OTS)
+                        using a single Public Key (the Root).</p>
+                    <div class="workflow-grid" style="display:flex; flex-direction:column; gap:20px;">
+                        <div class="step-card full-width">
+                            <h4>1. Enter Leaves (Data)</h4>
+                            <textarea id="merkle-leaves" class="hacker-input" style="height:120px;">Transaction 1
+Transaction 2
+Transaction 3
+Transaction 4</textarea>
+                            <button class="btn-action" onclick="runLabMerkle()" style="margin-top:10px;">🌳 Build Hash
+                                Tree</button>
+                        </div>
+                        <div class="step-card full-width">
+                            <h4>2. Merkle Root & Structure</h4>
+                            <div class="result-badge" id="merkle-root"
+                                style="color:var(--primary); word-break:break-all;">Wait...</div>
+                            <div class="console-box" id="merkle-viz" style="margin-top:20px; color:#fff;">Tree structure
+                                will appear here...</div>
+                        </div>
+                        <div class="step-card full-width">
+                            <h4>3. Verify Proof (Efficiency Demo)</h4>
+                            <p class="small-desc">Check if a specific transaction exists in the tree using only O(log N)
+                                hashes.</p>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                <input type="number" id="merkle-proof-idx" class="hacker-input"
+                                    placeholder="Leaf Index (e.g. 0)" style="max-width:150px;">
+                                <button class="btn-action" onclick="runLabMerkleProof()">🛡️ Verify Leaf</button>
+                            </div>
+                            <div class="console-box" id="merkle-proof-log" style="margin-top:20px; color:#10b981;">Proof
+                                Details...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-grover" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>Grover's Search Algorithm</h3>
+                        <span class="badge">Quantum Speedup</span>
+                    </div>
+                    <p class="desc">Quantumly searching an unsorted database of Size N takes only O(√N) steps.</p>
+                    <div style="display:flex; flex-direction:column; gap:15px; align-items:flex-start;">
+                        <div style="display:flex; gap:15px; align-items:center;">
+                            <input type="number" id="grover-size" class="hacker-input" value="16" min="4" max="512"
+                                style="width:120px;">
+                            <label>Database Size (N)</label>
+                        </div>
+                        <button class="btn-action" onclick="runLabGrover()">🔎 Start Quantum Search</button>
+                    </div>
+                    <div id="grover-grid"
+                        style="display:grid; grid-template-columns:repeat(auto-fill, minmax(50px, 1fr)); gap:10px; margin-top:20px;">
+                    </div>
+                    <div class="result-badge" id="grover-result" style="margin-top:20px;"></div>
+                </div>
+            </div>
+            <div id="tab-shor" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>Shor's Algorithm (Period Finding)</h3>
+                        <span class="badge">RSA Breaker</span>
+                    </div>
+                    <p class="desc">Quantum computers can efficiently find the period <b>r</b> of a function, which is
+                        the key step to factoring large numbers and breaking RSA.</p>
+                    <div style="display:flex; flex-direction:column; gap:15px; align-items:flex-start;">
+                        <div style="display:flex; gap:10px;">
+                            <input type="number" id="shor-a" class="hacker-input" placeholder="a (e.g. 7)">
+                            <input type="number" id="shor-n" class="hacker-input" placeholder="N (e.g. 15)">
+                        </div>
+                        <button class="btn-action" onclick="runLabShor()">🚀 Find Period (r)</button>
+                    </div>
+                    <div class="console-box" id="shor-log" style="margin-top:20px;"></div>
+                    <div class="metric-card" style="margin-top:20px;">
+                        <h4>Period (r)</h4>
+                        <div class="metric-value" id="shor-r">--</div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-qkd" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h3>QKD Simulator (BB84)</h3>
+                        <span class="badge success">Quantum Key Distribution</span>
+                    </div>
+                    <p class="desc">Secure key exchange using the properties of Quantum Mechanics. Attempts to observe
+                        the photons will disturb the key.</p>
+                    <div class="workflow-grid" style="display:flex; flex-direction:column; gap:20px;">
+                        <div class="step-card full-width">
+                            <h4>Alice (Sender)</h4>
+                            <div class="qkd-track" id="alice-qkd"
+                                style="display:flex; gap:5px; margin:10px 0; min-height:45px; flex-wrap:wrap;">
+                                <div class="qkd-bit">1</div>
+                                <div class="qkd-bit">0</div>
+                                <div class="qkd-bit">1</div>
+                                <div class="qkd-bit">1</div>
+                            </div>
+                            <button class="btn-subtle" onclick="genQkdBits()">🎲 1. Generate Qubits</button>
+                        </div>
+                        <div class="step-card full-width"
+                            style="display:flex; flex-direction:column; align-items:center; padding:1rem;">
+                            <h4>Quantum Channel</h4>
+                            <div style="text-align:center; font-size:2rem; animation: pulse-glow 2s infinite;">〰️ 〰️ 〰️
+                            </div>
+                        </div>
+                        <div class="step-card full-width">
+                            <h4>Bob (Receiver)</h4>
+                            <div class="qkd-track" id="bob-qkd"
+                                style="display:flex; gap:5px; margin:10px 0; min-height:45px; flex-wrap:wrap;">
+                                <span style="color:#555">Waiting for photons...</span>
+                            </div>
+                            <button class="btn-action" onclick="runLabQkd()">📡 2. Measure & Sift Keys</button>
+                        </div>
+                    </div>
+                    <div class="console-box" id="qkd-log" style="margin-top:1rem;"></div>
+                </div>
+            </div>
             <div id="tab-network" class="tab-content">
                 <div class="card glass-panel" style="min-height: 450px; display:flex; flex-direction:column;">
                     <div class="card-header">
-                        <h3>Enterprise Network Guard</h3>
                         <span class="badge success">Live Monitoring</span>
                     </div>
                     <p class="desc">Monitor encrypted traffic flows in real-time to detect anomalous data exfiltration
@@ -761,7 +928,7 @@
         </main>
     </div>
 
-    <!-- Custom Modal -->
+
     <div id="custom-modal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
